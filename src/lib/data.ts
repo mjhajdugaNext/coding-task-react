@@ -52,7 +52,7 @@ const logApiDebug = process.env.LOG_API_DEBUG === "true";
 
 const apiKey = process.env.SUPABASE_API_KEY;
 const supabaseBaseUrl =
-  process.env.SUPABASE_URL ?? "https://pmpgzuqkhfivzkmjtzng.supabase.co";
+  process.env.SUPABASE_URL ?? "https://pmpgzuqkhfivzkmjtzng.supabase.com";
 
 function ensureApiKey(): string {
   if (isMock) return "mock-api-key";
