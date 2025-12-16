@@ -9,11 +9,11 @@ export function sortAccounts(
   const sorted = [...accounts].sort((a, b) => {
     switch (column) {
       case "accountTypeLabel":
-        return collator.compare(a.accountTypeLabel, b.accountTypeLabel);
+        return collator.compare(a.accountTypeLabel ?? "", b.accountTypeLabel ?? "");
       case "value":
-        return a.value - b.value;
+        return (a.value ?? 0) - (b.value ?? 0);
       case "currency":
-        return collator.compare(a.currency, b.currency);
+        return collator.compare(a.currency ?? "", b.currency ?? "");
       case "id":
       default:
         return collator.compare(a.id, b.id);
