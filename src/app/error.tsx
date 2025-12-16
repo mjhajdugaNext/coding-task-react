@@ -15,14 +15,14 @@ export default function Error({ error, reset }: Props) {
     reportClientError(error);
   }, [error]);
 
+  const title = "Something went wrong";
+  const description = "We could not load this page right now. Please try again or contact support if the problem persists.";
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center">
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold text-foreground">Something went wrong</h1>
-        <p className="text-sm text-muted-foreground">
-          We could not load the accounts. Please try again or contact support if the problem
-          persists.
-        </p>
+        <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
       <Button variant="default" onClick={reset}>
         Retry

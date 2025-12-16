@@ -34,6 +34,11 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Debug env presence
+        run: |
+          [ -n "${SUPABASE_URL}" ] && echo "SUPABASE_URL_present" || echo "SUPABASE_URL_missing"
+          [ -n "${SUPABASE_API_KEY}" ] && echo "SUPABASE_API_KEY_present" || echo "SUPABASE_API_KEY_missing"
+
       - name: Typecheck
         run: npm run typecheck
 
