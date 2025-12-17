@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import AccountsTableSection from "@/components/accounts/accounts-table-section";
-import { AccountsTableSkeleton } from "@/components/accounts/accounts-skeleton";
+import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
   PageContainer,
   PageDescription,
@@ -33,7 +33,7 @@ export default function Page() {
         </PageHeader>
 
         <Section>
-          <Suspense fallback={<AccountsTableSkeleton />}>
+          <Suspense fallback={<TableSkeleton />}>
             {/* Streaming from server component + client table for interactivity */}
             <AccountsTableSection />
           </Suspense>
