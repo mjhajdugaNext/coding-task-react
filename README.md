@@ -7,7 +7,6 @@ SSR-first Next.js app that fetches compliance accounts and account-type dictiona
    - `SUPABASE_API_KEY` (required at runtime; do **not** commit).
    - `SUPABASE_URL` (optional, defaults to the provided Supabase URL).
    - `MOCK_API=true` if you want to run without hitting the real API (used in tests/E2E).
-   - `MONITORING_ENDPOINT` / `NEXT_PUBLIC_MONITORING_URL` if you wire up monitoring.
 2) Install deps (includes dev tooling): `NODE_ENV=development npm install`
 3) Dev server: `npm run dev` (defaults to http://localhost:3000).
 
