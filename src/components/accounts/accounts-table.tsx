@@ -46,9 +46,6 @@ export function AccountsTable({ accounts }: Props) {
       initialSort={defaultSort}
       emptyMessage="No accounts found."
       virtualized
-      height={520}
-      rowHeight={56}
-      overscan={4}
     />
   );
 }
