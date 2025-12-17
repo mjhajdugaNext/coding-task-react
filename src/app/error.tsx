@@ -4,6 +4,8 @@ import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 
+const logErrors = process.env.LOG_ERROR_LOGS === "true";
+
 type Props = {
   error: Error & { digest?: string };
   reset: () => void;
@@ -11,7 +13,9 @@ type Props = {
 
 export default function Error({ error, reset }: Props) {
   useEffect(() => {
-    console.info("Error boundary caught an error:", error);
+    if (logErrors) {
+      console.error("Error boundary caught an error:", error);
+    }
   }, [error]);
 
   const title = "Something went wrong";

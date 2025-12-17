@@ -48,6 +48,7 @@ const accountTypesPath = "/rest/v1/account_types?select=*";
 
 const isMock = process.env.MOCK_API === "true";
 const logApiDebug = process.env.LOG_API_DEBUG === "true";
+const logErrors = process.env.LOG_ERROR_LOGS === "true";
 
 const apiKey = process.env.SUPABASE_API_KEY;
 const supabaseBaseUrl =
@@ -102,8 +103,14 @@ async function requestJson<T>(path: string, options: RequestInitExtended = {}): 
 
     return response.json();
   } catch (err) {
-    // Handle reporting or retrying if needed
-    throw err;
+    const error =
+      err instanceof Error
+        ? err
+        : new Error(`Failed to fetch ${path}: ${String(err)}`);
+    if (logErrors) {
+      console.error("[requestJson]", error);
+    }
+    throw error;
   }
 }
 
