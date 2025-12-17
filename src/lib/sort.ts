@@ -1,27 +1,40 @@
-import type { AccountView, SortState } from "@/lib/data";
-
 const collator = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
 
-export function sortAccounts(
-  accounts: AccountView[],
-  { column, direction }: SortState,
-): AccountView[] {
-  const sorted = [...accounts].sort((a, b) => {
-    switch (column) {
-      case "accountTypeLabel":
-        return collator.compare(a.accountTypeLabel ?? "", b.accountTypeLabel ?? "");
-      case "value":
-        return (a.value ?? 0) - (b.value ?? 0);
-      case "currency":
-        return collator.compare(a.currency ?? "", b.currency ?? "");
-      case "id":
-      default:
-        return collator.compare(a.id, b.id);
-    }
-  });
+export type SortDirection = "asc" | "desc";
+export type SortState<K extends string = string> = { column: K; direction: SortDirection };
 
-  if (direction === "desc") {
-    sorted.reverse();
-  }
-  return sorted;
+export type SortableColumnConfig<T, K extends string = string> = {
+  key: K;
+  accessor?: (row: T) => string | number | undefined | null;
+  compare?: (a: T, b: T) => number;
+};
+
+function defaultCompare<T>(accessor?: (row: T) => string | number | undefined | null) {
+  return (a: T, b: T) => {
+    const va = accessor ? accessor(a) : undefined;
+    const vb = accessor ? accessor(b) : undefined;
+
+    if (typeof va === "number" && typeof vb === "number") {
+      return va - vb;
+    }
+
+    return collator.compare(
+      va === undefined || va === null ? "" : String(va),
+      vb === undefined || vb === null ? "" : String(vb),
+    );
+  };
+}
+
+export function sortRows<T, K extends string = string>(
+  rows: T[],
+  { column, direction }: SortState<K>,
+  columns: Array<SortableColumnConfig<T, K>>,
+): T[] {
+  const columnConfig = columns.find((config) => config.key === column);
+  const comparator =
+    columnConfig?.compare ??
+    (columnConfig?.accessor ? defaultCompare(columnConfig.accessor) : () => 0);
+
+  const sorted = [...rows].sort(comparator);
+  return direction === "desc" ? sorted.reverse() : sorted;
 }
