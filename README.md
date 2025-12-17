@@ -21,7 +21,6 @@ NODE_ENV=production npm run start
 - **Framework**: Next.js App Router + React 19. `app/page.tsx` uses `Suspense` to stream a server component that fetches data and hydrates a client table for sorting.
 - **Data layer**: `src/lib/data.ts` (server-only) fetches Supabase endpoints with runtime `SUPABASE_API_KEY`, validates with zod, and joins with the account type dictionary. `MOCK_API` short-circuits to fixtures in `src/mocks` for offline/dev and tests. Formatting lives in `src/lib/format.ts`.
 - **UI**: shadcn/ui (Tailwind 3) components under `src/components/ui`; Accounts table lives in `src/components/accounts`. Sorting is memoized in the client (`useMemo`) using `sortAccounts` from `src/lib/sort.ts`.
-- **Error/monitoring**: Route-level error boundary at `src/app/error.tsx` reports via `reportClientError` (`src/lib/monitoring.ts`). Server fetch errors are reported via `reportServerError` but never throw on reporting failures.
 - **Theming**: Tailwind CSS with CSS variables + shadcn tokens (`tailwind.config.ts`, `src/app/globals.css`).
 - **Runtime-only secrets**: The Supabase key is read only on the server and never exposed to the client bundle. Dictionary fetch failures fall back to raw IDs so the table still renders.
 
@@ -39,9 +38,6 @@ GitHub Actions workflow at `.github/workflows/ci.yml` runs lint â†’ typecheck â†
 - Set `SUPABASE_API_KEY` (and optionally `SUPABASE_URL`, `MONITORING_ENDPOINT`) as Amplify environment variables so they are injected at runtime, not at build time.
 - For previews, you can set `MOCK_API=true` to avoid hitting upstream APIs.
 - If deploying via GitHub Actions, prefer OIDC to assume an IAM role rather than long-lived keys.
-
-## Monitoring hook
-`src/lib/monitoring.ts` provides `reportServerError` and `reportClientError`. Wire these to your provider (Sentry/Datadog/etc.) by setting `MONITORING_ENDPOINT` or `NEXT_PUBLIC_MONITORING_URL`; the functions no-op if not configured.
 
 ## Key files
 - `src/app/page.tsx`, `src/components/accounts/accounts-table-section.tsx`: SSR fetch + streaming + hydration.

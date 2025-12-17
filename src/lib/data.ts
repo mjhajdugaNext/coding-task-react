@@ -3,7 +3,6 @@ import "server-only";
 import { z } from "zod";
 
 import { formatValue } from "@/lib/format";
-import { reportServerError } from "@/lib/monitoring";
 import { ensureMockServer } from "@/mocks/init-server";
 
 const valueSchema = z.preprocess(
@@ -95,22 +94,16 @@ async function requestJson<T>(path: string, options: RequestInitExtended = {}): 
     });
 
     if (!response.ok) {
-      const errorPayload = await response.text();
       const error = new Error(
         `Request failed ${method} ${path} -> ${response.status} ${response.statusText}`,
       );
-      reportServerError(error, { extra: errorPayload });
       throw error;
     }
 
     return response.json();
   } catch (err) {
-    const error =
-      err instanceof Error
-        ? err
-        : new Error(`Failed to fetch ${path}: ${String(err)}`);
-    reportServerError(error);
-    throw error;
+    // Handle reporting or retrying if needed
+    throw err;
   }
 }
 
@@ -119,15 +112,7 @@ export async function fetchAccounts(signal?: AbortSignal): Promise<AccountRecord
   if (logApiDebug) {
     console.info("[accounts-api-raw]", Array.isArray(raw) ? raw.slice(0, 5) : raw);
   }
-  const parsedResult = accountsResponseSchema.parse(raw);
-  const parsed = parsedResult.map((item) => ({
-    id: item.id,
-    account_type: item.account_type,
-    value: item.value,
-    currency: item.currency,
-  }));
-
-  return parsed;
+  return accountsResponseSchema.parse(raw);
 }
 
 export async function fetchAccountTypes(
@@ -142,16 +127,11 @@ export async function fetchAccountTypes(
   }
   const parsedResult = accountTypesResponseSchema.safeParse(raw);
   if (!parsedResult.success) {
-    reportServerError(parsedResult.error);
+    console.error("Account types parsing error:", parsedResult.error);
     return [];
   }
 
-  const parsed = parsedResult.data.map((item) => ({
-    id: item.id,
-    account_type_name: item.account_type_name,
-  }));
-
-  return parsed;
+  return parsedResult.data;
 }
 
 export function mapAccountsToView(
@@ -189,7 +169,7 @@ export async function getAccountView(signal?: AbortSignal): Promise<AccountView[
   const [accounts, accountTypes] = await Promise.all([
     fetchAccounts(signal),
     fetchAccountTypes(signal).catch((error) => {
-      reportServerError(error);
+      console.error("Error fetching account types:", error);
       return [];
     }),
   ]);

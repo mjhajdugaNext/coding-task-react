@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
-import { reportClientError } from "@/lib/monitoring";
 
 type Props = {
   error: Error & { digest?: string };
@@ -12,7 +11,7 @@ type Props = {
 
 export default function Error({ error, reset }: Props) {
   useEffect(() => {
-    reportClientError(error);
+    console.info("Error boundary caught an error:", error);
   }, [error]);
 
   const title = "Something went wrong";
