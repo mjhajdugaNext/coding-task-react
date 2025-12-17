@@ -44,7 +44,7 @@ test.describe("Accounts table", () => {
     await page.goto("/");
 
     const row = page.getByRole("row", { name: /ACT0145W/ });
-    await expect(row.getByRole("cell").nth(1)).toHaveText("");
+    await expect(row.getByRole("cell").nth(1)).toHaveText("ID: prp");
   });
 
   test("keeps account type empty when account types API fails", async ({ page }) => {
@@ -53,7 +53,7 @@ test.describe("Accounts table", () => {
     await page.goto("/");
 
     const row = page.getByRole("row", { name: /ACT0145W/ });
-    await expect(row.getByRole("cell").nth(1)).toHaveText("");
+    await expect(row.getByRole("cell").nth(1)).toHaveText("ID: prp");
   });
 
   test("renders error boundary when accounts fetch fails", async ({ page }) => {

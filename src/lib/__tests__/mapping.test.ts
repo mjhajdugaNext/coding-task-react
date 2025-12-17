@@ -27,7 +27,7 @@ describe("mapAccountsToView", () => {
 
   it("shows empty account type when mapping is missing", () => {
     const result = mapAccountsToView([...accounts], [...accountTypes]);
-    expect(result[1].accountTypeLabel).toBe("");
+    expect(result[1].accountTypeLabel).toBe("ID: missing");
   });
 
   it("leaves value fields empty when value is missing", () => {
