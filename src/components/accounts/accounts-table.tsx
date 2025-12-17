@@ -45,6 +45,10 @@ export function AccountsTable({ accounts }: Props) {
       getRowId={(row) => row.id}
       initialSort={defaultSort}
       emptyMessage="No accounts found."
+      virtualized
+      height={520}
+      rowHeight={56}
+      overscan={4}
     />
   );
 }
