@@ -64,12 +64,7 @@ function ensureApiKey(): string {
   return apiKey;
 }
 
-type RequestInitExtended = {
-  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-  body?: unknown;
-  signal?: AbortSignal;
-  headers?: Record<string, string>;
-};
+type RequestInitExtended = Pick<RequestInit, "method" | "body" | "signal" | "headers">;
 
 async function requestJson<T>(path: string, options: RequestInitExtended = {}): Promise<T> {
   if (isMock) {
