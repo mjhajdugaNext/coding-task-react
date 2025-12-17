@@ -87,7 +87,7 @@ export function mapAccountsToView(
     const label =
       account.account_type && typeMap.has(account.account_type)
         ? typeMap.get(account.account_type)
-        : "";
+        : `ID: ${account.account_type}` || "";
 
     return {
       id: account.id,
